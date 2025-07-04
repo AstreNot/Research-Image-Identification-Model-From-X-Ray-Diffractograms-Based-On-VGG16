@@ -22,6 +22,7 @@ Peak intensity vs. 2θ values were computed for Cu Kα radiation (λ = 1.5406 Å
 Image Generation:
 Simulated XRD patterns were plotted using matplotlib.
 Each plot was saved as a standardized PNG image (224x224 pixels, black background, white lines) for CNN training.
+![calcium chlorite1-2](https://github.com/user-attachments/assets/fddb5a95-14ad-4fe8-86ae-9cdda89a51ef)
 
 Preprocessing:
 Images were resized and normalized to meet VGG16 input requirements.
@@ -35,3 +36,55 @@ Dataset Splitting:
 Training: 70%
 Validation: 20%
 Test: 10%
+
+## 🧠 Model Architecture
+This project utilizes the VGG16 convolutional neural network as the backbone for classifying simulated X-ray diffractogram images. VGG16 was selected for its deep but simple architecture and proven performance in image classification tasks.
+
+### 🔧 Configuration:
+Base Model: VGG16 (pre-trained on ImageNet)
+Input Shape: 224 × 224 × 3
+Trainable Layers: Last convolutional block
+Architecture Modifications:
+Removed original top layers (include_top=False)
+Added GlobalAveragePooling2D
+Added Dense layer(s) with ReLU activation
+Final output layer with Softmax activation for multi-class classification
+
+
+### 🧮 Training Setup:
+Loss Function: Categorical Crossentropy
+Optimizer: Adam (learning rate = 0.0001)
+Metrics: Accuracy
+Early Stopping: Based on validation loss
+Epochs: 50 (with early stopping)
+Batch Size: 32
+
+The model was trained on a dataset of simulated XRD pattern images, categorized by crystal system or material class, to learn pattern-based features relevant to phase identification.
+## 🏋️ Training & Evaluation
+The training process was designed to fine-tune the VGG16 model on the simulated XRD image dataset while avoiding overfitting and maximizing generalization.
+
+Training Details
+Dataset Split:
+Training Set: 70%
+Validation Set: 20%
+Test Set: 10%
+
+Augmentation Techniques:
+Peak area
+2theta steps
+Peak position shifts
+
+Evaluation Metrics
+Model performance was evaluated on the test set using:
+Accuracy
+Loss
+
+A confusion matrix and classification report were generated to assess class-wise performance. The model showed potential to distinguish between visually similar diffractograms of different materials, though confusion remained between classes with overlapping peak positions.
+
+| Metric            | Value |
+| -------------     | ----- |
+| Training Accuracy | 88.4% |
+| Training Loss     | 0.356 |
+| Testing Accuracy  | 76.4% |
+| Testing Loss      | 0.863 |
+
